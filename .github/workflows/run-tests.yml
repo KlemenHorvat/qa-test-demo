@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build Docker image
-        run: docker build -t api-tests .
+        run: docker build -t api-tests ./api-tests
       - name: Run tests
         run: docker run --rm -v $PWD/test-report:/app/report api-tests pytest tests/ --html=report/report.html --self-contained-html
       - name: Upload report
