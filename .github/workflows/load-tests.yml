@@ -1,0 +1,22 @@
+name: Load Tests
+
+on:
+  push:
+    paths:
+      - 'load-tests/**'
+  pull_request:
+    paths:
+      - 'load-tests/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t locust-tests ./load-tests
+
+      - name: Run Locust load test
+        run: docker run --rm locust-tests
+        
