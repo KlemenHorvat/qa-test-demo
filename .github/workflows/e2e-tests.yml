@@ -1,0 +1,29 @@
+name: E2E Tests
+
+on:
+  push:
+    paths:
+      - 'e2e-tests/**'
+  pull_request:
+    paths:
+      - 'e2e-tests/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t e2e-tests ./e2e-tests
+
+      - name: Run Playwright tests
+        run: docker run --rm -v $PWD/test-report:/app/report e2e-tests pytest tests/ --browser=chromium --html=report/report.html --self-contained-html
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-report
+          path: test-report/
+          
